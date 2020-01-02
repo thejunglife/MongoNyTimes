@@ -4,17 +4,13 @@ let buildArticles = articles => {
   articles.forEach(article => {
     let artElem = document.createElement('div')
     artElem.innerHTML = `
-	<div class="row">
-    <div class="col s12 m">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-					<span class='card-title'><a target="_blank" href='${article.url}'>${article.heading}</a></span>
-					<p>${article.summary}</p>
-					<a  data-id=${article._id} class="waves-effect waves-light btn save">Save Article</a>
-        </div>
-      </div>
-    </div>
+	<div class="card" style="width: 49rem;">
+  <div class="card-body">
+  <a href="${article.url}" class="btn btn-primary">${article.heading}</a>
+    <p class="card-text">${article.summary}</p>
+     <a data-id=${article._id} class="btn btn-primary saveArticle">Save Article</a>
   </div>
+</div>
 		`
     document.getElementById('articles').append(artElem)
   })
@@ -77,7 +73,7 @@ document.addEventListener('click', e => {
     deleteArticles()
   }
 
-  if (e.target.className === 'waves-effect waves-light btn save') {
+  if (e.target.className === 'btn btn-primary saveArticle') {
     console.log(e.target.dataset.id)
     saveArticles(e.target.dataset.id)
     showArticles()
