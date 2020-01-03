@@ -4,10 +4,6 @@
 //   }
 // })
 
-document.addEventListener('DOMContentLoaded', function() {
-  var elems = document.querySelectorAll('.modal')
-  var instances = M.Modal.init(elems)
-})
 
 $('#myModal').on('shown.bs.modal', function() {
   $('#myInput').trigger('focus')
@@ -15,7 +11,7 @@ $('#myModal').on('shown.bs.modal', function() {
 
 
 
-// builds the articles
+//builds the articles
 let buildSaved = articles => {
 document.getElementById('savedArticles').innerHTML = ''
   articles.forEach(article => {
@@ -42,11 +38,11 @@ document.getElementById('savedArticles').innerHTML = ''
         </button>
       </div>
       <div class="modal-body">
-       <textarea class="form-control" id="${article._id}" rows="3"></textarea>
+       <textarea class="form-control" id="t${article._id}" rows="3"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary textarea" data-id="t${article._id}">Save changes</button>
       </div>
     </div>
   </div>
@@ -70,3 +66,42 @@ let savedArticles = () => {
     .catch(e => console.error(e))
 }
 savedArticles()
+
+
+document.addEventListener('click', e => {
+  if (e.target.className === 'btn btn-primary textarea') {
+let notesId = e.target.dataset.id
+let realId = notesId.slice(1)
+let notes = document.getElementById(notesId).value
+let comment = {
+  notes: notes,
+  parent: realId
+}
+console.log(comment)
+addNote(comment)
+
+document.getElementById(notesId).value = ''
+ 
+  }
+ 
+
+})
+
+// add comment to article
+let addNote = notes => {
+  axios.post('/comments', notes)
+  .then(() => {
+console.log("sucess")
+  })
+  .catch(e => console.error(e))
+}
+
+//show comment on article
+let showNote = () => {
+  axios.get('/comments')
+      .then(({ data }) => {
+console.log(data)
+      })
+      .catch(e => console.error(e))
+}
+showNote()

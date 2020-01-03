@@ -11,6 +11,7 @@ module.exports = app => {
   })
   // ADD comment
   app.post('/comments', (req, res) => {
+    console.log(req.body)
     Comment.create(req.body)
       .then(({ _id }) => {
         Article.updateOne(

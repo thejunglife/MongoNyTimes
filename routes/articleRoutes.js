@@ -39,7 +39,6 @@ module.exports = app => {
             .children('h2')
             .children('a')
             .attr('href')
-          console.log(url)
           db.articles.insert({
             heading: heading,
             summary: summary,
