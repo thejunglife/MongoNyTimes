@@ -21,7 +21,7 @@ document.getElementById('savedArticles').innerHTML = ''
   <div class="card-body">
   <a href="${article.url}" class="btn btn-primary">${article.heading}</a>
     <p class="card-text">${article.summary}</p>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#${article._id}">
+    <button type="button" class="btn btn-primary comment" data-toggle="modal" data-target="#${article._id}">
       Article Comment
     </button>
   </div>
@@ -37,12 +37,15 @@ document.getElementById('savedArticles').innerHTML = ''
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+  <ul class="list-group" id='r${article._id}'>
+  <li class="list-group-item"></li>
+</ul>
       <div class="modal-body">
        <textarea class="form-control" id="t${article._id}" rows="3"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary textarea" data-id="t${article._id}">Save changes</button>
+        <button type="button" class="btn btn-primary textarea" data-id="t${article._id}" data-dismiss="modal">Save changes</button>
       </div>
     </div>
   </div>
@@ -52,6 +55,24 @@ document.getElementById('savedArticles').innerHTML = ''
 		`
     document.getElementById('savedArticles').append(artElem)
   })
+}
+
+// build comment list within a saved article
+
+let buildComments = (comments, id) => {
+
+document.getElementById(`r${id}`).innerHTML = ''
+comments.forEach(comment => {
+  let listElem = document.createElement('li')
+  listElem.className = 'list-group-item'
+  // listElem.id = `${comment._id}`
+  listElem.innerHTML = `
+  ${comment.notes}
+  <button type="button" class="btn btn-danger delete" data-id = "${comment._id}" data-dismiss="modal">delete</button>
+  `
+  document.getElementById(`r${id}`).append(listElem)
+ 
+})
 }
 
 // show saved articles on saved.HTML
@@ -67,7 +88,7 @@ let savedArticles = () => {
 }
 savedArticles()
 
-
+// grabs comment from textarea
 document.addEventListener('click', e => {
   if (e.target.className === 'btn btn-primary textarea') {
 let notesId = e.target.dataset.id
@@ -83,6 +104,18 @@ addNote(comment)
 document.getElementById(notesId).value = ''
  
   }
+// Event to show comments when article comment is clicked
+  if (e.target.className === 'btn btn-primary comment') {
+    let datasetId = e.target.dataset.target
+    let commentId = datasetId.slice(1)
+    showNote(commentId)
+  }
+
+  if (e.target.className === 'btn btn-danger delete') {
+    let datasetId = e.target.dataset.id
+    deleteNote(datasetId)
+    
+  }
  
 
 })
@@ -96,12 +129,21 @@ console.log("sucess")
   .catch(e => console.error(e))
 }
 
-//show comment on article
-let showNote = () => {
-  axios.get('/comments')
-      .then(({ data }) => {
-console.log(data)
+// delete comment
+let deleteNote = deleteId => {
+  axios.delete(`/comments/${deleteId}`)
+      .then(() => {
+        
       })
       .catch(e => console.error(e))
 }
-showNote()
+
+//show comment(s) on article
+let showNote = commentId => {
+  axios.get(`/comments/${commentId}`)
+      .then(({ data }) => {
+        buildComments(data, commentId)
+      })
+      .catch(e => console.error(e))
+}
+
