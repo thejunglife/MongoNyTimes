@@ -6,7 +6,7 @@ let buildArticles = articles => {
     artElem.innerHTML = `
 	<div class="card" style="width: 49rem;">
   <div class="card-body">
-  <a href="${article.url}" class="btn btn-primary">${article.heading}</a>
+  <a href="${article.url}"  target ="_blank" class="btn btn-primary heading">${article.heading}</a>
     <p class="card-text">${article.summary}</p>
      <a data-id=${article._id} class="btn btn-primary saveArticle">Save Article</a>
   </div>

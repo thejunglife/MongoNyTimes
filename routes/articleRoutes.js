@@ -71,4 +71,11 @@ module.exports = app => {
       .then(() => res.sendStatus(200))
       .catch(e => console.error(e))
   })
+
+  // Delete article form saved
+  app.delete('/article/:id', (req, res) => {
+    Article.deleteOne({ _id: req.params.id })
+        .then(() => res.sendStatus(200))
+        .catch(e => console.error(e))
+  })
 }

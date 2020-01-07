@@ -19,11 +19,12 @@ document.getElementById('savedArticles').innerHTML = ''
     artElem.innerHTML = `
 	<div class="card" style="width: 49rem;">
   <div class="card-body">
-  <a href="${article.url}" class="btn btn-primary">${article.heading}</a>
+  <a href="${article.url}" target ="_blank" class="btn btn-primary heading">${article.heading}</a>
     <p class="card-text">${article.summary}</p>
     <button type="button" class="btn btn-primary comment" data-toggle="modal" data-target="#${article._id}">
       Article Comment
     </button>
+ <button class="btn btn-primary delSaved" id="a${article._id}">Delete From Saved</button>
   </div>
 </div>
 
@@ -117,6 +118,10 @@ document.getElementById(notesId).value = ''
     
   }
  
+ if (e.target.className === 'btn btn-primary delSaved') {
+   let articleId = e.target.id.slice(1)
+    deleteArticle(articleId)
+ }
 
 })
 
@@ -147,3 +152,13 @@ let showNote = commentId => {
       .catch(e => console.error(e))
 }
 
+// delete article from saved 
+
+let deleteArticle = deleteArt => {
+  axios.delete(`/article/${deleteArt}`)
+      .then(() => {
+        // temp fix 
+     location.reload()
+      })
+      .catch(e => console.error(e))
+}
