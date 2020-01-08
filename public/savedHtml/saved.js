@@ -1,10 +1,5 @@
-// open the modal
-// document.addEventListener('click', e => {
-//   if (e.target.className === 'waves-effect waves-light btn modal-trigger') {
-//   }
-// })
 
-
+// function for modal for article comments
 $('#myModal').on('shown.bs.modal', function() {
   $('#myInput').trigger('focus')
 })
@@ -153,12 +148,10 @@ let showNote = commentId => {
 }
 
 // delete article from saved 
-
 let deleteArticle = deleteArt => {
   axios.delete(`/article/${deleteArt}`)
       .then(() => {
-        // temp fix 
-     location.reload()
+    savedArticles()
       })
       .catch(e => console.error(e))
 }
